@@ -1,16 +1,3 @@
-docker run -it \
-  -e POSTGRES_USER:"root" \
-  -e POSTGRES_PASSWORD:"root" \
-  -e POSTGRES_DB:"ny_taxi" \
-  -v $(pwd)/ny_taxi_postgres_data:/var/lib/postgresql/data \
-  -p 5432:5432 \ 
-postgres:13
-
-
-
-
-
-
 docker network create pg-network
 
 docker run -it \
@@ -30,3 +17,14 @@ docker run -it \
   --network=pg-network \
   --name pgadmin-2 \
   dpage/pgadmin4
+
+URL="https://s3.amazonaws.com/nyc-tlc/trip+data/yellow_tripdata_2021-01.csv"
+
+python ingest_data.py \
+    --user=root \
+    --password=root \
+    --host=localhost \
+    --port=5432 \
+    --db=ny_taxi \
+    --table_name=yellow_taxi_trips \
+    --url=${URL}
